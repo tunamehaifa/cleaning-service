@@ -1,6 +1,6 @@
 import { Box, Button, Container, Flex } from "@chakra-ui/react";
 import Link from "next/link";
-import { ColorModeButton } from "../components/ui/color-mode";
+import { ColorModeButton } from "../../../shared/ui/components/color-mode";
 
 const navItems = [
   { href: "/", label: "Home" },
