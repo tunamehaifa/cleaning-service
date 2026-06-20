@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Spinner, Center } from "@chakra-ui/react";
 
-import { useAuthStore } from "@/shared/store/auth-store";
-import type { UserRole } from "@/shared/auth/types";
+import { useAuthStore } from "shared/store/auth-store";
+import type { UserRole } from "shared/auth/types";
 
 type AuthGuardProps = {
     children: React.ReactNode;

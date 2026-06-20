@@ -7,14 +7,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button, Heading, Input, Stack, Text, Field } from "@chakra-ui/react";
 
-import { LoginFormContainer } from "@/features/auth/components/LoginFormContainer";
-import { useAuthStore } from "@/shared/store/auth-store";
+import { LoginFormContainer } from "features/auth/components/LoginFormContainer";
+import { useAuthStore } from "shared/store/auth-store";
 import {
   authSchema,
   authUserSchema,
   type AuthFormValues,
   type AuthUser,
-} from "@/shared/auth/types";
+} from "shared/auth/types";
 
 type LoginUser = AuthUser & AuthFormValues;
 

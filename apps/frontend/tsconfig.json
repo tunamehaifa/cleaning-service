@@ -20,10 +20,10 @@
     ],
     "noEmit": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
       "@/*": [
-        "src/*"
+        "*"
       ]
     }
   },
