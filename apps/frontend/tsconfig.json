@@ -19,7 +19,13 @@
       "node"
     ],
     "noEmit": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
   },
   "include": [
     "next-env.d.ts",

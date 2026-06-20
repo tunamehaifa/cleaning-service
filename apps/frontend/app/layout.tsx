@@ -1,19 +1,12 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import { Provider } from "@/components/ui/provider"
 
-export const metadata: Metadata = {
-  title: "Matalenu",
-  description: "Cleaning service dashboard"
-};
-
-export default function RootLayout({
-  children
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout(props: { children: React.ReactNode }) {
+  const { children } = props
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html suppressHydrationWarning>
+      <body>
+        <Provider>{children}</Provider>
+      </body>
     </html>
-  );
+  )
 }
