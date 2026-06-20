@@ -3,24 +3,20 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button, Heading, Input, Stack, Text, Field } from "@chakra-ui/react";
 
 import { LoginFormContainer } from "@/features/auth/components/LoginFormContainer";
 import { useAuthStore } from "@/shared/store/auth-store";
-import type { UserRole } from "@/shared/auth/types";
+import {
+  authSchema,
+  authUserSchema,
+  type AuthFormValues,
+  type AuthUser,
+} from "@/shared/auth/types";
 
-type LoginFormValues = {
-  email: string;
-  password: string;
-};
-
-type LoginUser = {
-  email: string;
-  password: string;
-  name: string;
-  role: UserRole;
-};
+type LoginUser = AuthUser & AuthFormValues;
 
 const loginUsers: LoginUser[] = [
   {
@@ -44,7 +40,12 @@ const loginUsers: LoginUser[] = [
 ];
 
 function checkPassword(email: string, password: string) {
-  return loginUsers.find(
+  const parsedUsers = authUserSchema
+    .and(authSchema)
+    .array()
+    .parse(loginUsers);
+
+  return parsedUsers.find(
     (user) => user.email === email && user.password === password
   );
 }
@@ -58,21 +59,19 @@ export default function LoginPage() {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormValues>({
+  } = useForm<AuthFormValues>({
+    resolver: zodResolver(authSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  function onSubmit(values: LoginFormValues) {
+  function onSubmit(values: AuthFormValues) {
     const user = checkPassword(values.email, values.password);
 
     if (user) {
-      setUser({
-        name: user.name,
-        role: user.role,
-      });
+      setUser(user);
       router.push("/");
       return;
     }
@@ -94,9 +93,7 @@ export default function LoginPage() {
             <Input
               type="email"
               placeholder="admin@test.com"
-              {...register("email", {
-                required: "Email is required",
-              })}
+              {...register("email")}
             />
 
             <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
@@ -108,13 +105,7 @@ export default function LoginPage() {
             <Input
               type="password"
               placeholder="123456"
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
-              })}
+              {...register("password")}
             />
 
             <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
