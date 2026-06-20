@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { Provider } from "./components/ui/provider";
+import { Navbar } from "./navbar/Navbar";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Matalenu",
+  title: "Cleaning Service",
   description: "Cleaning service dashboard"
 };
 
@@ -12,8 +14,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Provider>
+          <Navbar />
+          {children}
+        </Provider>
+      </body>
     </html>
   );
 }
