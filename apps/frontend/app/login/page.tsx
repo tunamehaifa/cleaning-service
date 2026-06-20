@@ -7,13 +7,13 @@ import { useForm } from "react-hook-form";
 import { Button, Heading, Input, Stack, Text, Field } from "@chakra-ui/react";
 
 import { LoginFormContainer } from "@/features/auth/components/LoginFormContainer";
+import { useAuthStore } from "@/shared/store/auth-store";
+import type { UserRole } from "@/shared/auth/types";
 
 type LoginFormValues = {
   email: string;
   password: string;
 };
-
-type UserRole = "admin" | "cleaner" | "user";
 
 type LoginUser = {
   email: string;
@@ -51,6 +51,7 @@ function checkPassword(email: string, password: string) {
 
 export default function LoginPage() {
   const router = useRouter();
+  const setUser = useAuthStore((state) => state.setUser);
 
   const {
     register,
@@ -68,6 +69,10 @@ export default function LoginPage() {
     const user = checkPassword(values.email, values.password);
 
     if (user) {
+      setUser({
+        name: user.name,
+        role: user.role,
+      });
       router.push("/");
       return;
     }
