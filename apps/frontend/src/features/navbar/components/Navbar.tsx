@@ -2,12 +2,7 @@ import { Box, Button, Container, Flex } from "@chakra-ui/react";
 import Link from "next/link";
 import { ColorModeButton } from "../../../shared/ui/components/color-mode";
 
-const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/services", label: "Services" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" }
-];
+const navItems = [{ href: "/", label: "Home" }];
 
 export function Navbar() {
   return (
@@ -47,8 +42,8 @@ export function Navbar() {
                 <Link href={item.href}>{item.label}</Link>
               </Button>
             ))}
-            <ColorModeButton />
           </Flex>
+          <ColorModeButton />
         </Flex>
       </Container>
     </Box>
