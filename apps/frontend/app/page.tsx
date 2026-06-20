@@ -1,8 +1,8 @@
-import { StrictMode, useEffect, useState } from "react";
-import { createRoot } from "react-dom/client";
-import "./styles.css";
+"use client";
 
-function App() {
+import { useEffect, useState } from "react";
+
+export default function HomePage() {
   const [message, setMessage] = useState("Loading...");
 
   useEffect(() => {
@@ -16,15 +16,9 @@ function App() {
     <main className="app">
       <section className="panel">
         <p className="label">Matalenu</p>
-        <h1>React + Express + TypeScript</h1>
+        <h1>Next.js + Express + TypeScript</h1>
         <p>{message}</p>
       </section>
     </main>
   );
 }
-
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
