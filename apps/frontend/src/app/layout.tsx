@@ -1,12 +1,26 @@
-import { Provider } from "features/ui/components/provider"
+import type { Metadata } from "next";
+import { Navbar } from "../features/navbar/components/Navbar";
+import { Provider } from "../shared/ui/components/provider";
+import "./globals.css";
 
-export default function RootLayout(props: { children: React.ReactNode }) {
-  const { children } = props
+export const metadata: Metadata = {
+  title: "Cleaning Service",
+  description: "Cleaning service dashboard"
+};
+
+export default function RootLayout({
+  children
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <Provider>{children}</Provider>
+        <Provider>
+          <Navbar />
+          {children}
+        </Provider>
       </body>
     </html>
-  )
+  );
 }
