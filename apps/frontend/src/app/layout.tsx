@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Navbar } from "../features/navbar/components/Navbar";
+import { AuthGuard } from "../shared/auth/AuthGuard";
 import { Provider } from "../shared/ui/components/provider";
 import "./globals.css";
 
@@ -17,8 +18,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <Provider>
-          <Navbar />
-          {children}
+          <AuthGuard>
+            <Navbar />
+            {children}
+          </AuthGuard>
         </Provider>
       </body>
     </html>

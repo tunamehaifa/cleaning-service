@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Spinner, Center } from "@chakra-ui/react";
 
 import { useAuthStore } from "shared/store/auth-store";
@@ -12,6 +12,7 @@ type AuthGuardProps = {
 
     requireAuth?: boolean;
     allowedRoles?: UserRole[];
+    publicPaths?: string[];
 
     redirectIfNotAuth?: string;
     redirectIfWrongRole?: string;
@@ -21,10 +22,12 @@ export function AuthGuard({
     children,
     requireAuth = true,
     allowedRoles,
+    publicPaths = ["/login"],
     redirectIfNotAuth = "/login",
     redirectIfWrongRole = "/",
 }: AuthGuardProps) {
     const router = useRouter();
+    const pathname = usePathname();
     const user = useAuthStore((state) => state.user);
 
     const [isMounted, setIsMounted] = useState(false);
@@ -34,26 +37,30 @@ export function AuthGuard({
     }, []);
 
     const isAuthenticated = Boolean(user);
+    const isPublicPath = publicPaths.includes(pathname);
+    const shouldRequireAuth = requireAuth && !isPublicPath;
 
     const hasAllowedRole =
-        !allowedRoles || !user ? true : allowedRoles.includes(user.role);
+        !allowedRoles || !user
+            ? true
+            : user.roles.some((role) => allowedRoles.includes(role));
 
     useEffect(() => {
         if (!isMounted) {
             return;
         }
 
-        if (requireAuth && !isAuthenticated) {
+        if (shouldRequireAuth && !isAuthenticated) {
             router.replace(redirectIfNotAuth);
             return;
         }
 
-        if (requireAuth && isAuthenticated && !hasAllowedRole) {
+        if (shouldRequireAuth && isAuthenticated && !hasAllowedRole) {
             router.replace(redirectIfWrongRole);
         }
     }, [
         isMounted,
-        requireAuth,
+        shouldRequireAuth,
         isAuthenticated,
         hasAllowedRole,
         router,
@@ -69,11 +76,11 @@ export function AuthGuard({
         );
     }
 
-    if (requireAuth && !isAuthenticated) {
+    if (shouldRequireAuth && !isAuthenticated) {
         return null;
     }
 
-    if (requireAuth && isAuthenticated && !hasAllowedRole) {
+    if (shouldRequireAuth && isAuthenticated && !hasAllowedRole) {
         return null;
     }
 

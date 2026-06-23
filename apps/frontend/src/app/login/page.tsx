@@ -8,47 +8,11 @@ import { useForm } from "react-hook-form";
 import { Button, Heading, Input, Stack, Text, Field } from "@chakra-ui/react";
 
 import { LoginFormContainer } from "features/auth/components/LoginFormContainer";
+import { authService } from "features/auth/services/AuthServiceImpl";
 import { useAuthStore } from "shared/store/auth-store";
-import {
-  authSchema,
-  authUserSchema,
-  type AuthFormValues,
-  type AuthUser,
-} from "shared/auth/types";
+import { authSchema, type AuthFormValues } from "shared/auth/types";
 
-type LoginUser = AuthUser & AuthFormValues;
-
-const loginUsers: LoginUser[] = [
-  {
-    email: "admin@test.com",
-    password: "123456",
-    name: "Admin",
-    role: "admin",
-  },
-  {
-    email: "cleaner@test.com",
-    password: "123456",
-    name: "Cleaner",
-    role: "cleaner",
-  },
-  {
-    email: "user@test.com",
-    password: "123456",
-    name: "User",
-    role: "user",
-  },
-];
-
-function checkPassword(email: string, password: string) {
-  const parsedUsers = authUserSchema
-    .and(authSchema)
-    .array()
-    .parse(loginUsers);
-
-  return parsedUsers.find(
-    (user) => user.email === email && user.password === password
-  );
-}
+const loginErrorMessage = "Invalid username or password";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -62,23 +26,23 @@ export default function LoginPage() {
   } = useForm<AuthFormValues>({
     resolver: zodResolver(authSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
 
-  function onSubmit(values: AuthFormValues) {
-    const user = checkPassword(values.email, values.password);
+  async function onSubmit(values: AuthFormValues) {
+    try {
+      const user = await authService.login(values);
 
-    if (user) {
       setUser(user);
       router.push("/");
       return;
+    } catch {
+      setError("root", {
+        message: loginErrorMessage,
+      });
     }
-
-    setError("root", {
-      message: "Wrong email or password",
-    });
   }
 
   return (
@@ -87,16 +51,16 @@ export default function LoginPage() {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack gap="4">
-          <Field.Root invalid={Boolean(errors.email)}>
+          <Field.Root invalid={Boolean(errors.username)}>
             <Field.Label>Email</Field.Label>
 
             <Input
-              type="email"
+              type="text"
               placeholder="admin@test.com"
-              {...register("email")}
+              {...register("username")}
             />
 
-            <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
+            <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
           </Field.Root>
 
           <Field.Root invalid={Boolean(errors.password)}>
